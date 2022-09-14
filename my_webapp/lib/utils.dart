@@ -1,6 +1,5 @@
-// ignore_for_file: avoid_print
-
 import 'package:flutter/material.dart';
+
 import 'localStorage.dart';
 
 class DefaultAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -19,33 +18,24 @@ class DefaultAppBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => const Size.fromHeight(56);
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+// ignore: non_constant_identifier_names
+Widget DefaultContainer () {
 
-  @override
-  HomePage createState() => HomePage();
-}
-
-class HomePage extends State<MyApp> {
   TextEditingController limiteSuperior = TextEditingController();
   TextEditingController limiteInferior = TextEditingController();
   TextEditingController n = TextEditingController();
   TextEditingController expressao = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
-  
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const DefaultAppBar(),
-      body: Container(
+
+  return Container(
         padding: const EdgeInsets.all(16),
         width: double.infinity,
-        child: Form (
+        child: Form(
           key: _formKey,
           child: Column(
             children: <Widget>[
-              TextFormField (
+              TextFormField(
                 controller: limiteInferior,
                 decoration: const InputDecoration(
                   labelText: 'Limite Inferior: ',
@@ -73,7 +63,9 @@ class HomePage extends State<MyApp> {
                   hintText: '(-x² + 4x - 3)',
                 ),
               ),
-              const SizedBox(height: 25,),
+              const SizedBox(
+                height: 25,
+              ),
               ElevatedButton(
                 onPressed: () {
                   SaveUserExpression().saveLimInferior(limiteInferior);
@@ -83,18 +75,20 @@ class HomePage extends State<MyApp> {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.cyan[100],
-                  padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 50),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 50, vertical: 50),
                 ),
-                child: const Text("Calcular", style: TextStyle(
+                child: const Text(
+                  "Calcular",
+                  style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
-                  ),),
+                  ),
+                ),
               ),
             ],
           ),
         ),
-        ),
-    );
-  }
+      );
 }
