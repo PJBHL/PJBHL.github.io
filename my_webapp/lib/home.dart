@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print
 
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'calculo.dart';
 import 'localStorage.dart';
@@ -16,10 +17,23 @@ class MyApp extends StatefulWidget {
 }
 
 class HomePage extends State<MyApp> {
-  TextEditingController limiteSuperior = TextEditingController();
   TextEditingController limiteInferior = TextEditingController();
+  TextEditingController limiteSuperior = TextEditingController();
   TextEditingController n = TextEditingController();
   TextEditingController expressao = TextEditingController();
+  String calculo = " ";
+  int inferior = 0;
+  int superior = 0;
+  int nNumber  = 0;
+  bool atualizado = false;
+  String Y = "";
+
+  void createExpressionString() {
+    setState(() {
+      calculo = expressao.text;
+      atualizado = true;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,9 +82,15 @@ class HomePage extends State<MyApp> {
                     ElevatedButton(
                       onPressed: () {
                         SaveUserExpression().saveLimInferior(limiteInferior);
+                        inferior = int.parse(limiteInferior.text);
                         SaveUserExpression().saveLimSuperior(limiteSuperior);
+                        superior = int.parse(limiteSuperior.text);
                         SaveUserExpression().saveN(n);
+                        nNumber = int.parse(n.text);
                         SaveUserExpression().saveExpression(expressao);
+                        Y = expressao.text;
+                        createExpressionString();
+                        SaveUserExpression().getAllLocalStore();
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,
@@ -95,6 +115,9 @@ class HomePage extends State<MyApp> {
                 width: double.infinity,
                 child: Row(
                   children: <Widget> [
+                    //Text(calculo),
+                    if(atualizado)
+                      Math.tex(r'\int_''{$inferior}^{$superior} $Y'),
                   ],
                 ),
               ),

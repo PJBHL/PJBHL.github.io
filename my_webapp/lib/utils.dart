@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'localStorage.dart';
 
 class DefaultAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -16,79 +15,4 @@ class DefaultAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize => const Size.fromHeight(56);
-}
-
-// ignore: non_constant_identifier_names
-Widget DefaultContainer () {
-
-  TextEditingController limiteSuperior = TextEditingController();
-  TextEditingController limiteInferior = TextEditingController();
-  TextEditingController n = TextEditingController();
-  TextEditingController expressao = TextEditingController();
-
-  final _formKey = GlobalKey<FormState>();
-
-  return Container(
-        padding: const EdgeInsets.all(16),
-        width: double.infinity,
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: <Widget>[
-              TextFormField(
-                controller: limiteInferior,
-                decoration: const InputDecoration(
-                  labelText: 'Limite Inferior: ',
-                  hintText: '1... 100... -1',
-                ),
-              ),
-              TextFormField(
-                controller: limiteSuperior,
-                decoration: const InputDecoration(
-                  labelText: 'Limite Superior: ',
-                  hintText: '1... 100... -1',
-                ),
-              ),
-              TextFormField(
-                controller: n,
-                decoration: const InputDecoration(
-                  labelText: 'Valor de N: ',
-                  hintText: 'Tender ao infinito',
-                ),
-              ),
-              TextFormField(
-                controller: expressao,
-                decoration: const InputDecoration(
-                  labelText: 'Expressão: ',
-                  hintText: '(-x² + 4x - 3)',
-                ),
-              ),
-              const SizedBox(
-                height: 25,
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  SaveUserExpression().saveLimInferior(limiteInferior);
-                  SaveUserExpression().saveLimSuperior(limiteSuperior);
-                  SaveUserExpression().saveN(n);
-                  SaveUserExpression().saveExpression(expressao);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.cyan[100],
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 50, vertical: 50),
-                ),
-                child: const Text(
-                  "Calcular",
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
 }
