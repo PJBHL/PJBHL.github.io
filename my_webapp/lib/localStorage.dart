@@ -7,28 +7,35 @@ class SaveUserExpression {
     String valorDigitado = digitado.text;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString("limInferior", valorDigitado);
-    print("Saved (Limite Inferior): $valorDigitado\n");
+    //print("Saved (Limite Inferior): $valorDigitado\n");
   }
 
   saveLimSuperior(TextEditingController digitado) async {
     String valorDigitado = digitado.text;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString("limSuperior", valorDigitado);
-    print("Saved (Limite Superior): $valorDigitado\n");
+    //print("Saved (Limite Superior): $valorDigitado\n");
   }
 
   saveN(TextEditingController digitado) async {
     String valorDigitado = digitado.text;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString("n", valorDigitado);
-    print("Saved (n): $valorDigitado\n");
+    //print("Saved (n): $valorDigitado\n");
   }
 
   saveExpression(TextEditingController digitado) async {
     String valorDigitado = digitado.text;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString("expression", valorDigitado);
-    print("Saved (expressao): $valorDigitado\n");
+    //print("Saved (expressao): $valorDigitado\n");
+  }
+
+  saveInputData(TextEditingController inf, sup, n, expression) async {
+    saveLimInferior(inf);
+    saveLimSuperior(sup);
+    saveN(n);
+    saveExpression(expression);
   }
 
   removeSavedData() async {
@@ -48,37 +55,31 @@ class SaveUserExpression {
   }
 
   Future<String> getLimInferior() async {
-    final prefs = await SharedPreferences.getInstance();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     String limInf = prefs.getString("limInferior") ?? "Sem Valor";
-    print("Valor de Limite Inferior Recuperado: $limInf");
+    //print("Valor limite inferior recuperado: $inferior");
     return limInf;
   }
 
   Future<String> getLimSuperior() async {
-    final prefs = await SharedPreferences.getInstance();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     String limSup = prefs.getString("limSuperior") ?? "Sem Valor";
-    print("Valor de Limite Superior Recuperado: $limSup");
+    //print("Valor limite superior recuperado: $superior");
     return limSup;
+  }
+  
+  Future<double> getN() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String n = prefs.getString("n") ?? "Sem Valor";
+    double nNumber = double.parse(n);
+    //print("N recuperado: $nNumber");
+    return nNumber;
   }
 
   Future<String> getExpression() async {
-    final prefs = await SharedPreferences.getInstance();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     String expression = prefs.getString("expression") ?? "Sem Valor";
-    print("Valor expression recuperado: $expression");
+    //print("Expressao recuperada: $expression");
     return expression;
-  }
-
-  Future<String> getN() async {
-    final prefs = await SharedPreferences.getInstance();
-    String n = prefs.getString("n") ?? "Sem Valor";
-    print("Valor de n recuperado: $n");
-    return n;
-  }
-
-  getAllLocalStore() async {
-    getLimInferior();
-    getLimSuperior();
-    getExpression();
-    getN();
   }
 }

@@ -2,6 +2,7 @@
 
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:function_tree/function_tree.dart';
 import 'calculo.dart';
 import 'localStorage.dart';
 import 'utils.dart';
@@ -17,22 +18,43 @@ class MyApp extends StatefulWidget {
 }
 
 class HomePage extends State<MyApp> {
-  TextEditingController limiteInferior = TextEditingController();
-  TextEditingController limiteSuperior = TextEditingController();
-  TextEditingController n = TextEditingController();
-  TextEditingController expressao = TextEditingController();
-  String calculo = " ";
-  int inferior = 0;
-  int superior = 0;
-  int nNumber  = 0;
-  bool atualizado = false;
-  String Y = "";
+  // Variáveis de controle de entrada de dados (formulário flutter).
+  TextEditingController infController   = TextEditingController();
+  TextEditingController supController   = TextEditingController();
+  TextEditingController nController     = TextEditingController();
+  TextEditingController expressionInput = TextEditingController();
 
-  void createExpressionString() {
+  // Variáveis de controle de recuperação de dados e manipulação para calculos.
+  String limInferior = " ";
+  String limSuperior = " ";
+  double nNumber     = 0.0;
+  String expression  = " ";
+  bool  localStorage = false;
+
+  @override
+  void initState() {
+    super.initState();
+    SaveUserExpression().removeSavedData();
+  }
+
+  void createExpressionWidget() {
     setState(() {
-      calculo = expressao.text;
-      atualizado = true;
+      localStorage = true;
     });
+  }
+
+  String createLatexExpression(String input) {
+    input = input.replaceAll(' ', '');
+
+    if(input.contains('sqrt')) {
+
+    }
+
+    if(input.contains('pi')){
+      input = input.replaceAll(RegExp(r'pi'), '\pi');
+    }
+
+    return input;
   }
 
   @override
@@ -55,42 +77,42 @@ class HomePage extends State<MyApp> {
                         labelText: "Limite Inferior: ",
                         hintText: "... -1, 0, 1 ...",
                       ),
-                      controller: limiteInferior,
+                      controller: infController,
                     ),
                     TextField(
                       decoration: const InputDecoration(
                         labelText: "Limite Superior: ",
                         hintText: "... -1, 0, 1 ...",
                       ),
-                      controller: limiteSuperior,
+                      controller: supController,
                     ),
                     TextField(
                       decoration: const InputDecoration(
                         labelText: "N: ",
                         hintText: "... tender ao infinito ...",
                       ),
-                      controller: n,
+                      controller: nController,
                     ),
                     TextField(
                       decoration: const InputDecoration(
                         labelText: "Expressão (fx): ",
                         hintText: "... x² + 1...",
                       ),
-                      controller: expressao,
+                      controller: expressionInput,
                     ),
                     const SizedBox(height: 20,),
                     ElevatedButton(
-                      onPressed: () {
-                        SaveUserExpression().saveLimInferior(limiteInferior);
-                        inferior = int.parse(limiteInferior.text);
-                        SaveUserExpression().saveLimSuperior(limiteSuperior);
-                        superior = int.parse(limiteSuperior.text);
-                        SaveUserExpression().saveN(n);
-                        nNumber = int.parse(n.text);
-                        SaveUserExpression().saveExpression(expressao);
-                        Y = expressao.text;
-                        createExpressionString();
-                        SaveUserExpression().getAllLocalStore();
+                      onPressed: () async {
+                        SaveUserExpression().saveInputData(infController, supController, nController, expressionInput);
+                        infController.clear(); supController.clear(); nController.clear(); expressionInput.clear();
+                        limInferior  = await SaveUserExpression().getLimInferior();
+                        num inf      = limInferior.interpret();
+                        limSuperior  = await SaveUserExpression().getLimSuperior();
+                        num sup      = limSuperior.interpret();
+                        nNumber      = await SaveUserExpression().getN();
+                        expression   = await SaveUserExpression().getExpression();
+                        calculoRiemman(expression, inf, sup, nNumber);
+                        createExpressionWidget();
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,
@@ -115,9 +137,8 @@ class HomePage extends State<MyApp> {
                 width: double.infinity,
                 child: Row(
                   children: <Widget> [
-                    //Text(calculo),
-                    if(atualizado)
-                      Math.tex(r'\int_''{$inferior}^{$superior} $Y'),
+                    if(localStorage)
+                      Math.tex(r'\int_''{$limInferior}^{$limSuperior} $expression')
                   ],
                 ),
               ),
