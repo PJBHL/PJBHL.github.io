@@ -49,13 +49,6 @@ class SaveUserExpression {
     print("Data Removed");
   }
 
-  valueDelimitations(TextEditingController inf, TextEditingController sup) async {
-    int infValue = int.parse(inf.text);
-    int supValue = int.parse(sup.text);
-    if(infValue >= supValue) {
-    }
-  }
-
   // Função para recuperar o valor de limite inferior e salva-lo em uma string.
   Future<String> getLimInferior() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -74,7 +67,12 @@ class SaveUserExpression {
   Future<double> getN() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String n = prefs.getString("n") ?? "Sem Valor";
-    double nNumber = double.parse(n);
+    double nNumber;
+    try {
+      nNumber = double.parse(n);
+    } on FormatException {
+      return 100000;
+    }
     return nNumber;
   }
 

@@ -32,9 +32,11 @@ String calculoRiemman(String expression, num inf, num sup, n) {
   // Somatório de i = 1 até n.
   // Cada iteração calcula o valor de um dos intervalos xi gerados.
   for(int i = 1; i <= n; i++) {
+    //print("for de riemman");
     xi = xI(inf, delta, i); // xi calculado a cada interação.
     result = expression.replaceAll(RegExp(r'x'), "$xi"); // substituir xi em "x" na string para o calculo.
-    var calc = result.interpret(); // interpreta a string e devolve um resultado inteiro. Exemplo: "2+2" = 4.
+    //print("for2 de riemman");
+    var calc = result.interpret();
     intervalos += calc; // Iterando o valor do resultado de cada intervalor de xi.
   }
 

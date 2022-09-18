@@ -1,8 +1,8 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, use_build_context_synchronously, unnecessary_string_interpolations
 import 'package:flutter/material.dart';
 import 'package:function_tree/function_tree.dart';
 import 'calculo.dart';
-import 'localStorage.dart';
+import 'local_storage.dart';
 import 'utils.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 
@@ -62,21 +62,21 @@ class HomePage extends State<MyApp> {
     String xiN      = '$infLatex + $deltaN * i';
 
     // string para manipulação latex.
-    String result   = " ";
-    String tmp = result;
+    String result   = input;
 
     // Manipulação de notações latex para impressão na tela.
-    if(input.contains('^2')) {
-      result = input.replaceAll(r'x^2', '(x)^2');
-      result = result.replaceAll(r'x', '$xiN');      
+    if(input.contains('^')) {
+      result = result.replaceAll(r'x^', '(x)^');
+      result = result.replaceAll(r'x', '$xiN');
     }
     if(input.contains('teta')) {
-      result = input.replaceAll(r'teta', '$xiN');
+      result = result.replaceAll(r'teta', '$xiN');
     }
     if(input.contains('^x')) {
-      result = input.replaceAll(r'x', '{$xiN}');
+      result = result.replaceAll(r'x', '{$xiN}');
+    } else {
+      result = result.replaceAll(r'x', '$xiN');
     }
-    // Faltando o f(x) para x normal.
 
     // Coluna titulo - Resultados.
     return Column(
@@ -272,7 +272,7 @@ class HomePage extends State<MyApp> {
                       decoration: const InputDecoration(
                         labelText: "N: ",
                         labelStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                        hintText: "... tender ao infinito ...",
+                        hintText: "... entrada de apenas números, caso não entender sua entrada o padrão será 100000 ...",
                       ),
                       textInputAction: TextInputAction.next,
                       controller: nController,
@@ -316,9 +316,11 @@ class HomePage extends State<MyApp> {
                         expression   = await SaveUserExpression().getExpression();
                         deltax       = deltaX(inf, sup, nNumber);
                         xi           = xI(inf, deltax, 1);
-                        riemann = calculoRiemman(expression, inf, sup, nNumber);
-                        createExpressionWidget();
-                        input = createLatexExpression(expression);
+                        if(createErrorInfo(context, expression, inf, sup, nNumber) == false) {
+                          riemann = calculoRiemman(expression, inf, sup, nNumber);
+                          createExpressionWidget();
+                          input = createLatexExpression(expression);
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.cyan[100],

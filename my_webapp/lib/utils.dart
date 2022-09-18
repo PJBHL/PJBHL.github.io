@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'localStorage.dart';
+import 'package:function_tree/function_tree.dart';
 
 // Classe de estilização da appbar do front end.
 class DefaultAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -84,4 +84,56 @@ String refactorExpression(String expression) {
   }
 
   return expression;
+}
+
+bool createErrorInfo(BuildContext context, String expression, num inf, num sup, n) {
+
+  expression = refactorExpression(expression);
+
+  bool error         = false;
+  String errorStatus = "";
+
+  try {
+    expression.interpret();
+  } on Exception {
+    error = true;
+    errorStatus = "Não entendi a sua expressão!\nExpressão: $expression\nVerifique as entradas aceitas.";
+  }
+
+  if(n < 0) {
+    errorStatus = "N menor do que 0 -> $n";
+    error = true;
+  }
+
+  if (error == true) {
+    Widget okButton = TextButton(
+      child: const Text("OK"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: const Text("Erro na interpretação de algum dado de sua entrada:", 
+      style: TextStyle(color: Colors.red,
+      fontWeight: FontWeight.bold,
+      fontSize: 20),),
+      content: Text(errorStatus, style: const TextStyle(
+        fontSize: 15,
+        fontWeight: FontWeight.bold,
+      ),),
+      actions: [
+        okButton,
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  return error;
 }
