@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'localStorage.dart';
 
+// Classe de estilização da appbar do front end.
 class DefaultAppBar extends StatelessWidget implements PreferredSizeWidget {
   const DefaultAppBar({Key? key}) : super(key: key);
 
@@ -19,9 +20,9 @@ class DefaultAppBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => const Size.fromHeight(56);
 }
 
+// Função para manipular a expressão f(x) de entrada do usuário e salva-la em um formato latex para exibição.
 String createLatexExpression(String expression) {
   String input = expression.replaceAll(' ', '');
-  print("String em input: $input");
 
   if (input.contains('/')) {
     List<String> instancias;
@@ -54,36 +55,32 @@ String createLatexExpression(String expression) {
     input = input.replaceAll(r'sqrt', r'\sqrt');
     input = input.replaceAll(r'(', r'{');
     input = input.replaceAll(r')', r'}');
-    print("Resultado de sqrt: $input");
   }
 
   if (input.contains('pi')) {
     input = input.replaceAll(RegExp(r'pi'), r'\pi');
-    print("Resultado de pi: $input");
   }
 
   return input;
 }
 
+// Função para manipular a expressão f(x) de entrada do usuário de modo que o interpretador da biblioteca Math o entenda.
+// Exemplo 1.1 - inserir -x causa conflito, portanto eu mudo para -1*x
+// Exemplo 1.2 - inserir sen em portugues causaria erro, logo eu estou mudando sen para sin, sem que o usuário veja.
+// Exemplo 1.3 - inserir "teta" é incompreensível para o interpretador, logo eu mudo para X.
 String refactorExpression(String expression) {
   expression = expression.replaceAll(' ', '');
 
   if (expression.contains('-x')) {
-    print("Expressao obtida em refactor(x): $expression");
     expression = expression.replaceAll(r'-x', '-1*x');
-    print("Depois do refactor: $expression");
   }
 
   if (expression.contains('sen')) {
-    print("Expressao obtida em refactor(sen): $expression");
     expression = expression.replaceAll(r'sen', 'sin');
-    print("Depois do refactor: $expression");
   }
 
   if (expression.contains('teta')) {
-    print("Expressao obtida em refactor(teta): $expression");
     expression = expression.replaceAll(r'teta', 'x');
-    print("Depois do refactor: $expression");
   }
 
   return expression;
